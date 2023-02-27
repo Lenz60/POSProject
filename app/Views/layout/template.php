@@ -25,6 +25,22 @@
                         </a>
                     </li>
                     <li>
+                        <a href="/supplier" class="nav-link text-white">
+                            <svg class="bi me-2" width="16" height="16">
+                                <use xlink:href="#speedometer2" />
+                            </svg>
+                            Supplier
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/customer" class="nav-link text-white">
+                            <svg class="bi me-2" width="16" height="16">
+                                <use xlink:href="#speedometer2" />
+                            </svg>
+                            Customer
+                        </a>
+                    </li>
+                    <li>
                         <a href="/purchase" class="nav-link text-white">
                             <svg class="bi me-2" width="16" height="16">
                                 <use xlink:href="#speedometer2" />
@@ -38,6 +54,14 @@
                                 <use xlink:href="#speedometer2" />
                             </svg>
                             Sales Order
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/product" class="nav-link text-white">
+                            <svg class="bi me-2" width="16" height="16">
+                                <use xlink:href="#speedometer2" />
+                            </svg>
+                            Supplier Product
                         </a>
                     </li>
                 </ul>
