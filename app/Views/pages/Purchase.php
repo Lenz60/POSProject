@@ -59,9 +59,9 @@
                     <?php foreach ($data as $row) { ?>
                         <tr>
                             <td><?= $row['id'] ?></td>
-                            <td><?= $row['name'] ?></td>
-                            <td><?= $row['email'] ?></td>
-                            <td><?= $row['address'] ?></td>
+                            <td><?= $row['suplier_id'] ?></td>
+                            <td><?= $row['product_id'] ?></td>
+                            <td><?= $row['purchased_price'] ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>
