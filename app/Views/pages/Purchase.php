@@ -16,6 +16,16 @@
                 <div class="form-group">
                     <label for="prodid">Product Id</label>
                     <input type="text" class="form-control" id="prodid" name="prodid" placeholder="Check Product ID on Product Page">
+                    <small id="prodidhelp" class="form-text text-muted">Empty if want to add new product</small>
+                </div>
+                <div class="form-group">
+                    <label for="newprodname">New Product Name</label>
+                    <input type="text" class="form-control" id="newprodname" name="newprodname">
+                    <small id="newprodnamehelp" class="form-text text-muted">Input new product name if you want to add new product</small>
+                </div>
+                <div class="form-group">
+                    <label for="purprice">Purchased Price</label>
+                    <input type="text" class="form-control" id="purprice" name="purprice" placeholder="Check Product ID on Product Page">
                 </div>
                 <div class="form-group">
                     <label for="qty">qty</label>
