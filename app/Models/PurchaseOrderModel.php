@@ -17,7 +17,7 @@ class PurchaseOrderModel extends Model
         'supplier_id', 'product_id', 'product_name', 'purchased_price', 'qty', 'discount',
         'dpp', 'ppn', 'total', 'purchased_at', 'name', 'price'
     ];
-    protected $useTimestamps = true;
+    // protected $useTimestamps = true;
 
     public function get()
     {
@@ -27,13 +27,20 @@ class PurchaseOrderModel extends Model
     }
 
 
-    // public function getAll()
-    // {
-    //     $builder = $this->db->table('purchase_order');
-    //     $builder->join('supplier', 'supplier.id = purchase_order.supplier_id');
-    //     $builder->join('product', 'product.id = supplier.product_id');
-    //     $builder->select('product.name,purchase_order.qty,product');
-    // }
+    public function getAll()
+    {
+        $modelPO = new PurchaseOrder();
+        $builder = $modelPO->table('purchase_order');
+        $builder->join('supplier', 'supplier.id = purchase_order.supplier_id');
+        $builder->join('product', 'product.id = supplier.product_id');
+        $builder->select('supplier.id,supplier.name,
+                product.id,product.name,
+                purchase_order.qty,purchase_order.purchased_price,
+                purchase_order.discount,purchase_order.dpp,purchase_order.ppn,
+                purchase_order.total,purchase_order.purchased_at');
+        $data = $builder->findAll();
+        return $data;
+    }
 
     public function newProduct($dataInserted)
     {
@@ -52,8 +59,10 @@ class PurchaseOrderModel extends Model
                 'qty' => $dataInserted['qty'],
                 'price' => $dataInserted['total']
             ];
-            // dd($newProduct);
             $modelProduct->save($newProduct);
+            $builder->orderBy('id', 'desc');
+            $data2 = $builder->where('name', $dataInserted['product_name'])->first();
+            return $data2['id'];
         }
     }
 
@@ -82,10 +91,8 @@ class PurchaseOrderModel extends Model
 
     public function create($dataInserted)
     {
-        // dd($dataInserted);
         $modelPO = new PurchaseOrderModel();
-        $modelProduct = new ProductModel();
         $builder = $modelPO->table('purchase_order');
-        $builder->save($dataInserted);
+        $modelPO->save($dataInserted);
     }
 }
