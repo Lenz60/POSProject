@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\ProductModel;
 use App\Models\PurchaseOrderModel;
 use App\Models\SupplierModel;
+use CodeIgniter\I18n\Time;
 
 class PurchaseOrderController extends BaseController
 {
@@ -14,15 +15,16 @@ class PurchaseOrderController extends BaseController
     }
     public function index()
     {
-        // $model = new PurchaseOrderModel();
-        // $dataProduct = $model->get();
-        // dd($dataProduct);
+        $model = new PurchaseOrderModel();
+        $dataProduct = $model->get();
+        dd($dataProduct);
         // return view('/pages/Purchase', ['data' => $dataProduct]);
-        return view('/pages/Purchase');
+        // return view('/pages/Purchase');
     }
 
     public function insert()
     {
+        $time = Time::now('Asia/Jakarta', 'en_US');
         $product = new ProductModel();
         $purchaseOrder = new PurchaseOrderModel();
         $supplierId = $this->request->getVar('suppid');
@@ -32,6 +34,7 @@ class PurchaseOrderController extends BaseController
         $qty = $this->request->getVar('qty');
         $discount = $this->request->getVar('discount');
         if ($productId == null || $productId == 0) {
+            $productId = null;
             $price1 = $purchasedPrice * $qty;
             $discountValue = $discount / 100;
             $discountedCalc = $price1 * $discountValue;
@@ -54,13 +57,12 @@ class PurchaseOrderController extends BaseController
                 'dpp' => $dppPrice,
                 'ppn' => $ppnPrice,
                 'total' => $totalPrice,
-                'purchased_at' => date("Y-m-d H:i:s"),
             ];
-            $purchaseOrder->newProduct($data);
+            $lastProductId = $purchaseOrder->newProduct($data);
 
             $data2 = [
                 'supplier_id' => $supplierId,
-                'product_id' => $productId,
+                'product_id' => $lastProductId,
                 'purchased_price' => $purchasedPrice,
                 'qty' => $qty,
                 'discount' => $discount,
@@ -69,6 +71,8 @@ class PurchaseOrderController extends BaseController
                 'total' => $totalPrice,
                 'purchased_at' => date("Y-m-d H:i:s"),
             ];
+            // dd($data2['purchased_at']);
+
 
             // number_format((float)$dppPrice, 2, ',', ''),
             $purchaseOrder->create($data2);
