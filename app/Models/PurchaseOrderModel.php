@@ -10,11 +10,12 @@ use Exception;
 
 class PurchaseOrderModel extends Model
 {
+
     protected $table = 'purchase_order';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'supplier_id', 'supplier_product_id', 'qty', 'discount',
-        'dpp', 'ppn', 'total_price', 'purchased_at', 'name', 'price'
+        'supplier_id', 'product_id', 'product_name', 'purchased_price', 'qty', 'discount',
+        'dpp', 'ppn', 'total', 'purchased_at', 'name', 'price'
     ];
     protected $useTimestamps = true;
 
@@ -25,25 +26,66 @@ class PurchaseOrderModel extends Model
         return $data;
     }
 
-    public function getAll()
+
+    // public function getAll()
+    // {
+    //     $builder = $this->db->table('purchase_order');
+    //     $builder->join('supplier', 'supplier.id = purchase_order.supplier_id');
+    //     $builder->join('product', 'product.id = supplier.product_id');
+    //     $builder->select('product.name,purchase_order.qty,product');
+    // }
+
+    public function newProduct($dataInserted)
     {
-        $builder = $this->db->table('purchase_order');
-        $builder->join('supplier', 'supplier.id = purchase_order.supplier_id');
-        $builder->join('supplier_product', 'supplier_product.id = purchase_order.supplier_product_id');
-        $builder->select('');
+        $modelProduct = new ProductModel();
+        $productId = $dataInserted['product_id'];
+        $builder = $modelProduct->table('product');
+        $data = $builder->where('id', $productId)->first();
+        if (!$data || $dataInserted['product_id'] == null) {
+            $modelProduct->table('product');
+            $id = $modelProduct->first();
+            // $newId = $id['id'] + 1;
+            // $dataInserted['product_id'] = $newId;
+            $newProduct = [
+                'supplier_id' => $dataInserted['supplier_id'],
+                'name' => $dataInserted['product_name'],
+                'qty' => $dataInserted['qty'],
+                'price' => $dataInserted['total']
+            ];
+            // dd($newProduct);
+            $modelProduct->save($newProduct);
+        }
+    }
+
+
+    public function updateQty($dataInserted)
+    {
+        $modelPO = new PurchaseOrderModel();
+        $modelProduct = new ProductModel();
+        $builder = $modelProduct->table('product');
+        $data = [
+            'supplier_id' => $dataInserted['supplier_id'],
+            'name' => $dataInserted['name'],
+            'qty' => $dataInserted['qty'],
+            'price' => $dataInserted['total']
+        ];
+        $check = $builder->where('id', $dataInserted['id'])->first();
+        if ($check) {
+            $qtyNew = $data['qty'] + $check['qty'];
+            $data['qty'] = $qtyNew;
+            $builder->set($data);
+            $builder->where('id', $dataInserted['id']);
+            $builder->update();
+            return $modelProduct->affectedRows();
+        }
     }
 
     public function create($dataInserted)
     {
-        $model = new PurchaseOrderModel();
+        // dd($dataInserted);
+        $modelPO = new PurchaseOrderModel();
         $modelProduct = new ProductModel();
-        $productId = $dataInserted['product_id'];
-        $builder = $modelProduct->table('product');
-        $data = $builder->where('product_id', $productId)->first();
-        if (!$data) {
-            throw new Exception('Product not found');
-        } else {
-            return $data;
-        }
+        $builder = $modelPO->table('purchase_order');
+        $builder->save($dataInserted);
     }
 }
