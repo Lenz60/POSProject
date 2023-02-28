@@ -1,19 +1,14 @@
 <?php
 
-namespace APP\Models;
+namespace App\Models;
 
 use CodeIgniter\Model;
-use CodeIgniter\API\ResponseTrait;
-use CodeIgniter\Exceptions;
-use CodeIgniter\Exceptions\PageNotFoundException;
-use Exception;
-use CodeIgniter\Config\Database;
 
 class ProductModel extends Model
 {
-    use ResponseTrait;
     protected $table = 'product';
     protected $primaryKey = 'id';
+    protected $allowedFields = ['supplier_id', 'name', 'qty', 'price'];
 
 
     public function get()
@@ -31,7 +26,15 @@ class ProductModel extends Model
         if ($priceItem != null) {
             return $priceItem['price'];
         } else {
-            throw new PageNotFoundException;
+            throw new PageNotFoundException('Product with id Suplier not found.');
         }
     }
+
+    // public function insertnewProduct($dataInserted)
+    // {
+    //     $model = new ProductModel();
+    //     $builder = $model->table('product');
+    //     $data = $model->save($dataInserted);
+    //     dd($data);
+    // }
 }
